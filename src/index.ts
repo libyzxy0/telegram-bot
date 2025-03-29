@@ -84,4 +84,4 @@ app.get('/', (_req,res) => {
   res.send("gago ampt")
 })
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => cosnole.log('App is listening of on fucking port: '+ PORT))
+app.listen(PORT, () => console.log('App is listening of on fucking port: '+ PORT))
