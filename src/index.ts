@@ -1,7 +1,9 @@
 import TelegramBot from 'node-telegram-bot-api';
 import axios from 'axios'
 import 'dotenv/config'
+import express from 'express'
 
+const app = express();
 const token = process.env.BOT_TOKEN;
 
 const bot = new TelegramBot(token, {polling: true});
@@ -77,3 +79,9 @@ bot.onText(/\/shoti/, async (msg) => {
     console.log(error)
   }
 });
+
+app.get('/', (_req,res) => {
+  res.send("gago ampt")
+})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => cosnole.log('App is listening of on fucking port: '+ PORT))
