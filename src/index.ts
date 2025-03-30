@@ -1,12 +1,15 @@
 import TelegramBot from 'node-telegram-bot-api';
-import axios from 'axios'
+import Shoti from 'shoti'
 import 'dotenv/config'
 import express from 'express'
 
 const app = express();
 const token = process.env.BOT_TOKEN;
 
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token, {
+  polling: true
+});
+const shoti = new Shoti(process.env.SHOTI_APIKEY)
 
 console.log("Running!")
 
@@ -17,27 +20,26 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 });
 
 bot.onText(/\/as (.+)/, async (msg, match) => {
-  
+
   const chatId = msg.chat.id;
-  
-  if(msg.from.id !== 5544405507) {
+
+  if (msg.from.id !== 5544405507) {
     return await bot.sendMessage(chatId, "You don't have permission to use this command!");
   }
-  
+
   const resp = match[1];
   const maxRetries = 5;
   let attempt = 0;
 
   while (attempt < maxRetries) {
     try {
-      const { data } = await axios.post("https://shoti.fbbot.org/api/new-shoti", {
-        apikey: process.env.SHOTI_APIKEY,
-        url: resp,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const data = await shoti.newShoti({
+        url: resp
+      })
+
+      if (data.code === 400) {
+        throw new Error("Failed to add video")
+      }
 
       console.log(data);
       await bot.sendMessage(chatId, "Done!");
@@ -64,23 +66,30 @@ bot.on('message', (msg) => {
 */
 
 
-bot.onText(/\/shoti/, async (msg) => {
+bot.onText(/\/start/, async (msg) => {
   try {
-  const chatId = msg.chat.id;
-  const {data} = await axios.get('https://shoti.fbbot.org/api/get-shoti')
-  
-  const {result} = data;
-  const {user} = result;
-  
-  console.log(result)
-  
-  await bot.sendVideo(chatId, result.content, { caption: `${user.username}` })
+    const chatId = msg.chat.id;
+
+    for (let i = 0; i < 100; i++) {
+      const result = await shoti.getShoti()
+
+      const {
+        user
+      } = result;
+
+      console.log(result)
+
+      await bot.sendVideo(chatId, result.content, {
+        caption: `${user.username}`
+      })
+    }
+
   } catch (error) {
     console.log(error)
   }
 });
 
-app.get('/', (_req,res) => {
+app.get('/', (_req, res) => {
   res.send("gago ampt")
 })
 const PORT = process.env.PORT || 3000;
