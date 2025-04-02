@@ -11,14 +11,6 @@ const bot = new TelegramBot(token, {
 });
 const shoti = new Shoti(process.env.SHOTI_APIKEY)
 
-console.log("Running!")
-
-bot.onText(/\/echo (.+)/, (msg, match) => {
-  const chatId = msg.chat.id;
-  const resp = match[1];
-  bot.sendMessage(chatId, resp);
-});
-
 bot.onText(/\/as (.+)/, async (msg, match) => {
 
   const chatId = msg.chat.id;
@@ -41,7 +33,6 @@ bot.onText(/\/as (.+)/, async (msg, match) => {
         throw new Error("Failed to add video")
       }
 
-      console.log(data);
       await bot.sendMessage(chatId, "Done!");
       return;
     } catch (error) {
@@ -57,40 +48,60 @@ bot.onText(/\/as (.+)/, async (msg, match) => {
 });
 
 
-/*
-bot.on('message', (msg) => {
+bot.onText(/\/ishoti/, async (msg) => {
   const chatId = msg.chat.id;
-
-  bot.sendMessage(chatId, 'Received your message');
-});
-*/
-
-
-bot.onText(/\/start/, async (msg) => {
   try {
-    const chatId = msg.chat.id;
+    const result = await shoti.getShoti({
+      "type": "image"
+    })
+    await bot.setMessageReaction(chatId, msg.message_id, {
+      reaction: JSON.stringify([{
+        type: 'emoji', emoji: '🔥'
+      }])
+    })
 
-    for (let i = 0; i < 100; i++) {
-      const result = await shoti.getShoti()
-
-      const {
-        user
-      } = result;
-
-      console.log(result)
-
-      await bot.sendVideo(chatId, result.content, {
+    const {
+      user,
+      content
+    } = result;
+    const media = content.map(url => {
+      return {
+        type: 'photo',
+        media: url,
         caption: `${user.username}`
-      })
-    }
-
+      }
+    })
+    await bot.sendMediaGroup(chatId, media)
   } catch (error) {
-    console.log(error)
+    bot.sendMessage(chatId, "Agai, nag error pare.");
+    console.log(error.message)
+  }
+})
+
+bot.onText(/\/shoti/, async (msg) => {
+  const chatId = msg.chat.id;
+  try {
+    const result = await shoti.getShoti()
+    await bot.setMessageReaction(chatId, msg.message_id, {
+      reaction: JSON.stringify([{
+        type: 'emoji', emoji: '🔥'
+      }])
+    })
+    const {
+      user
+    } = result;
+    await bot.sendVideo(chatId, result.content, {
+      caption: `${user.username}`
+    })
+  } catch (error) {
+    bot.sendMessage(chatId, "Agai, nag error pare.");
+    console.log(error.message)
   }
 });
 
 app.get('/', (_req, res) => {
   res.send("gago ampt")
 })
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log('App is listening of on fucking port: '+ PORT))
