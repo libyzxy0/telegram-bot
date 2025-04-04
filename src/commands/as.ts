@@ -2,27 +2,20 @@ import { Config } from "@/types";
 import "dotenv/config";
 import Shoti from "shoti";
 
-const config: Config = {
-    name: "shoti",
-    description: "Sends a random tiktok girl videos.",
-    usage: "/shoti",
-    permission: "normal"
+export const config: Config = {
+    name: "as",
+    description: "Adds shoti collection to the database.",
+    usage: "/as [url]",
+    permission: "admin"
 };
 
 const shoti = new Shoti(process.env.SHOTI_APIKEY);
 
 export async function execute({ api, event, args }) {
-    if (event.from.id !== 5544405507) {
-        return await api.sendMessage(
-            event.chat.id,
-            "You don't have permission to use this command!"
-        );
-    }
-
     const url = args[0];
 
     if (!url) {
-        return await api.sendMessage(event.chat.id, "Please enter a tiktok url!");
+        return await api.sendMessage(event.chat.id, "⚠️Invalid use of command!\n💡Usage: " + config.usage);
     }
 
     try {
@@ -30,7 +23,9 @@ export async function execute({ api, event, args }) {
         
         console.log(data)
 
-        await api.sendMessage(event.chat.id, `${JSON.stringify(data, null, 2) + '\n'}`)
+        await api.sendMessage(event.chat.id, "*API Response*\n\n```json\n" + `${JSON.stringify(data, null, 2) + '\n'}` + "\n```", {
+          parse_mode: "Markdown"
+        })
         
     } catch (error) {
         await api.sendMessage(event.chat.id, "Failed!");

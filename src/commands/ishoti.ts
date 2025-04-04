@@ -2,7 +2,7 @@ import { Config } from "@/types";
 import "dotenv/config";
 import Shoti from "shoti";
 
-const config: Config = {
+export const config: Config = {
     name: "ishoti",
     description: "Sends a random tiktok girl images.",
     usage: "/ishoti",
