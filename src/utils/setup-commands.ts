@@ -8,6 +8,7 @@ export async function setupCommands(bot) {
 
     const commands = await Promise.all(commandFiles.map(async (file) => {
       const command = await import(path.join(commandsDir, file));
+    
       return {
         command: command.config.name,
         description: command.config.description

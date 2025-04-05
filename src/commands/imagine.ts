@@ -11,7 +11,7 @@ export const config: Config = {
 
 export async function execute({ api, event, args }) {
     try {
-        if (!args.length === 0)
+        if (args.length == 0)
             return api.sendMessage(
                 event.chat.id,
                 `⚠️Invalid use of command!\n💡Usage: ${config.usage}`
