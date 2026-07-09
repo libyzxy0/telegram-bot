@@ -10,7 +10,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/node-telegram-bot-api": "^0.64.8",
     "axios": "^1.8.4",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
@@ -21,6 +20,7 @@
     "youtubei.js": "^13.3.0"
   },
   "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.64.15",
     "prettier": "1.18.2",
     "typescript": "^7.0.2"
   }
