@@ -1,17 +1,18 @@
-import { Config } from "@/types";
+import { Config, Execute } from "@/types";
 import axios from "axios";
 
 export const config: Config = {
     name: "ip",
     description: "Get information of any IP Address.",
     usage: "/ip [query]",
-    permission: "normal"
+    permission: "normal",
+    creator: "libyzxy0"
 };
-function escapeMarkdownV2(text) {
+function escapeMarkdownV2(text: string) {
     return text?.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\$&');
 }
 
-export async function execute({ api, event, args }) {
+export async function execute({ api, event, args }: Execute) {
     try {
         const ip = args[0];
 

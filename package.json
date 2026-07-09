@@ -16,15 +16,12 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "node-telegram-bot-api": "^0.66.0",
-    "postgrejs": "^2.22.3",
-    "postgres": "^3.4.5",
-    "shoti": "^1.0.6",
     "tg-resolve": "^1.3.1",
     "tsx": "^4.19.3",
     "youtubei.js": "^13.3.0"
   },
   "devDependencies": {
-    "prettier": "1.18.2"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+    "prettier": "1.18.2",
+    "typescript": "^7.0.2"
+  }
 }

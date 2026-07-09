@@ -1,5 +1,8 @@
-export const handleCommands = (bot, chatbotConfig) => {
-    bot.on("message", async message => {
+import { ChatbotConfig } from "@/types";
+import TelegramBot, { Message } from "node-telegram-bot-api";
+
+export const handleCommands = (bot: TelegramBot, chatbotConfig: ChatbotConfig) => {
+    bot.on("message", async (message: Message) => {
         try {
             const text = message?.text;
             if (!text?.startsWith("/")) return;
@@ -15,11 +18,11 @@ export const handleCommands = (bot, chatbotConfig) => {
 };
 
 const importCommand = async (
-    commandName,
-    bot,
-    message,
-    args,
-    chatbotConfig
+    commandName: string,
+    bot: TelegramBot,
+    message: Message,
+    args: string[],
+    chatbotConfig: ChatbotConfig
 ) => {
     try {
         const { execute, config } = await import(`@/commands/${commandName}`);
@@ -28,18 +31,20 @@ const importCommand = async (
             throw new Error(`Command '${commandName}' is missing a config.`);
         }
 
+        if(!message.from) return;
+
         if (
             config.permission &&
             config.permission == "admin" &&
-            !chatbotConfig.admins.includes(message.from.id)
+            !chatbotConfig.admins.includes(message?.from.id)
         ) {
             bot.setMessageReaction(message.chat.id, message.message_id, {
-                reaction: JSON.stringify([
+                reaction: [
                     {
                         type: "emoji",
                         emoji: "🤬"
                     }
-                ])
+                ]
             });
             bot.sendMessage(
                 message.chat.id,
