@@ -1,15 +1,15 @@
 import chalk from "chalk";
 import { bot } from "@/utils/telegram";
 import { chatbotConfig } from "@/config";
-import { handleCommands } from "@/utils/handle-commands";
-import { setupCommands } from "@/utils/setup-commands";
+import { handleCommands } from "@/utils/handlecmd";
+import { setupCommands } from "@/utils/initcmd";
 import "@/keep_alive";
 
 const setupChatbot = async () => {
   const { name } = await bot.getMyName();
   
   await setupCommands(bot);
-  console.log(chalk.cyan.bold("[SYSTEM]: Commands set up!"));
+  console.log(chalk.cyan.bold("[SYSTEM]: Command set up complete!"));
   
   await handleCommands(bot, chatbotConfig);
   console.log(chalk.cyan.bold("[SYSTEM]: Ready to accept user commands!"));

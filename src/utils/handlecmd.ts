@@ -5,6 +5,7 @@ export const handleCommands = (bot: TelegramBot, chatbotConfig: ChatbotConfig) =
     bot.on("message", async (message: Message) => {
         try {
             const text = message?.text;
+
             if (!text?.startsWith("/")) return;
 
             const [command, ...args] = text.split(" ");
@@ -31,7 +32,7 @@ const importCommand = async (
             throw new Error(`Command '${commandName}' is missing a config.`);
         }
 
-        if(!message.from) return;
+        if (!message.from) return;
 
         if (
             config.permission &&
@@ -55,6 +56,9 @@ const importCommand = async (
 
         await execute({ api: bot, event: message, args, chatbotConfig });
     } catch (error) {
-        console.error(`Error executing '${commandName}':`, error);
+        console.error(
+            `Error executing '${commandName}':`,
+            error instanceof Error ? error.message : String(error)
+        );
     }
 };

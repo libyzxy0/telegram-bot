@@ -1,0 +1,42 @@
+import { Config, Execute } from "@/types";
+import "dotenv/config";
+import Shoti from "shoti";
+
+export const config: Config = {
+    name: "ishoti",
+    description: "Sends a random tiktok girl images.",
+    usage: "/ishoti",
+    permission: "normal",
+    creator: 'libyzxy0'
+};
+
+const shoti = new Shoti(process.env.SHOTI_APIKEY);
+
+export async function execute({ api, event }: Execute) {
+    try {
+        const result = await shoti.getShoti({
+            type: "image"
+        });
+        await api.setMessageReaction(event.chat.id, event.message_id, {
+            reaction: [
+                {
+                    type: "emoji",
+                    emoji: "🔥"
+                }
+            ]
+        });
+
+        const { user, content } = result;
+        const media = content.map((url: string) => {
+            return {
+                type: "photo",
+                media: url,
+                caption: `${user.username}`
+            };
+        });
+        await api.sendMediaGroup(event.chat.id, media);
+    } catch (error) {
+        api.sendMessage(event.chat.id, "Error: " + error.message);
+        console.log(error.message);
+    }
+}
